@@ -51,6 +51,20 @@ proto_library_with_info(
 )
 
 ##############################################################################
+# Go
+##############################################################################
+load(
+    "@com_google_googleapis_imports//:imports.bzl",
+    "go_proto_library",
+)
+
+go_proto_library(
+    name = "services_go_proto",
+		importpath = "google.golang.org/genproto/googleapis/ads/googleads/v8/services",
+    protos = [":services_proto"],
+)
+
+##############################################################################
 # Java
 ##############################################################################
 load(
