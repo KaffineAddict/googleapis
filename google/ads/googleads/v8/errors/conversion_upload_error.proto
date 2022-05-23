@@ -63,8 +63,8 @@ message ConversionUploadErrorEnum {
     // Ads clicks.
     GCLID_NOT_FOUND = 7;
 
-    // The click associated with the given gclid is owned by a customer
-    // account that the uploading customer does not manage.
+    // The click associated with the given gclid is owned by a customer account
+    // that the uploading customer does not manage.
     UNAUTHORIZED_CUSTOMER = 8;
 
     // No upload eligible conversion action that matches the provided
@@ -132,7 +132,7 @@ message ConversionUploadErrorEnum {
     // as email addresses or phone numbers.
     CUSTOM_VARIABLE_VALUE_CONTAINS_PII = 29;
 
-    // The click associated with the given GCLID isn't from the account where
+    // The click associated with the given gclid isn't from the account where
     // conversion tracking is set up.
     INVALID_CUSTOMER_FOR_CLICK = 30;
 
@@ -144,6 +144,25 @@ message ConversionUploadErrorEnum {
     // comply with the App Tracking Transparency (ATT) policy or the person who
     // converted didn't consent to tracking.
     CONVERSION_NOT_COMPLIANT_WITH_ATT_POLICY = 32;
+
+    // No click was found for the provided user identifiers that could be
+    // applied to the specified conversion action.
+    CLICK_NOT_FOUND = 33;
+
+    // The provided user identifier is not a SHA-256 hash. It is either unhashed
+    // or hashed using a different hash function.
+    INVALID_USER_IDENTIFIER = 34;
+
+    // Conversion actions which use an external attribution model cannot be used
+    // with UserIdentifier.
+    EXTERNALLY_ATTRIBUTED_CONVERSION_ACTION_NOT_PERMITTED_WITH_USER_IDENTIFIER = 35;
+
+    // The provided user identifier is not supported. ConversionUploadService
+    // only supports hashed_email and hashed_phone_number.
+    UNSUPPORTED_USER_IDENTIFIER = 36;
+
+    // The user_identifier_source must be FIRST_PARTY for conversion uploads.
+    INVALID_USER_IDENTIFIER_SOURCE = 37;
   }
 
 

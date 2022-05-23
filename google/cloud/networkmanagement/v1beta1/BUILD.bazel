@@ -232,7 +232,7 @@ load(
 
 nodejs_gapic_library(
     name = "networkmanagement_nodejs_gapic",
-    package_name = "@google-cloud/networkmanagement",
+    package_name = "@google-cloud/network-management",
     src = ":networkmanagement_proto_with_info",
     extra_protoc_parameters = ["metadata"],
     grpc_service_config = "networkmanagement_grpc_service_config.json",
@@ -274,8 +274,15 @@ ruby_grpc_library(
 ruby_cloud_gapic_library(
     name = "networkmanagement_ruby_gapic",
     srcs = [":networkmanagement_proto_with_info"],
-    extra_protoc_parameters = ["ruby-cloud-gem-name=google-cloud-networkmanagement-v1beta1"],
+    extra_protoc_parameters = [
+        "ruby-cloud-gem-name=google-cloud-network_management-v1beta1",
+        "ruby-cloud-api-shortname=networkmanagement",
+        "ruby-cloud-api-id=networkmanagement.googleapis.com",
+        "ruby-cloud-product-url=https://cloud.google.com/network-intelligence-center/docs/connectivity-tests/reference/networkmanagement/rest",
+    ],
     grpc_service_config = "networkmanagement_grpc_service_config.json",
+    ruby_cloud_description = "The Network Management API provides a collection of network performance monitoring and diagnostic capabilities.",
+    ruby_cloud_title = "Network Management V1beta1",
     deps = [
         ":networkmanagement_ruby_grpc",
         ":networkmanagement_ruby_proto",
@@ -319,6 +326,7 @@ csharp_gapic_library(
     srcs = [":networkmanagement_proto_with_info"],
     common_resources_config = "@gax_dotnet//:Google.Api.Gax/ResourceNames/CommonResourcesConfig.json",
     grpc_service_config = "networkmanagement_grpc_service_config.json",
+    service_yaml = "networkmanagement_v1beta1.yaml",
     deps = [
         ":networkmanagement_csharp_grpc",
         ":networkmanagement_csharp_proto",

@@ -18,6 +18,7 @@ proto_library(
         "//google/api:client_proto",
         "//google/api:field_behavior_proto",
         "//google/api:resource_proto",
+        "@com_google_protobuf//:field_mask_proto",
     ],
 )
 
@@ -50,7 +51,10 @@ proto_library_with_info(
 ##############################################################################
 # Java
 ##############################################################################
-load("@com_google_googleapis_imports//:imports.bzl", "java_grpc_library", "java_proto_library")
+load("@com_google_googleapis_imports//:imports.bzl",
+     "java_grpc_library",
+     "java_proto_library",
+     "java_gapic_assembly_gradle_pkg")
 
 java_proto_library(
     name = "iam_java_proto",
@@ -67,6 +71,16 @@ java_grpc_library(
     deps = [":iam_java_proto"],
 )
 
+# Please DO-NOT-REMOVE this section.
+# This is required to generate java files for these protos.
+# Open Source Packages
+java_gapic_assembly_gradle_pkg(
+    name = "google-iam-v1-java",
+    deps = [
+        "iam_java_proto",
+        "iam_java_grpc",
+    ],
+)
 ##############################################################################
 # Go
 ##############################################################################
@@ -149,4 +163,102 @@ py_proto_library(
 py_proto_library(
     name = "options_py_proto",
     deps = [":options_proto"]
+)
+
+##############################################################################
+# Ruby
+##############################################################################
+load(
+    "@com_google_googleapis_imports//:imports.bzl",
+    "ruby_gapic_assembly_pkg",
+    "ruby_cloud_gapic_library",
+    "ruby_grpc_library",
+    "ruby_proto_library",
+)
+
+ruby_proto_library(
+    name = "iam_ruby_proto",
+    deps = [
+        ":iam_policy_proto",
+        ":options_proto",
+        ":policy_proto",
+        "//google/iam/v1/logging:audit_data_proto"
+    ],
+)
+
+ruby_grpc_library(
+    name = "iam_ruby_grpc",
+    srcs = [":iam_policy_proto"],
+    deps = [":iam_ruby_proto"],
+)
+
+ruby_cloud_gapic_library(
+    name = "iam_ruby_gapic",
+    srcs = [":iam_proto_with_info"],
+    extra_protoc_parameters = [
+        "ruby-cloud-gem-name=google-iam-v1",
+    ],
+    ruby_cloud_description = "An add-on interface used by some Google API clients to provide IAM Policy calls.",
+    ruby_cloud_title = "IAM",
+    deps = [
+        ":iam_ruby_grpc",
+        ":iam_ruby_proto",
+    ],
+)
+
+# Open Source Packages
+ruby_gapic_assembly_pkg(
+    name = "google-cloud-iam-v1-ruby",
+    deps = [
+        ":iam_ruby_gapic",
+        ":iam_ruby_grpc",
+        ":iam_ruby_proto",
+    ],
+)
+
+##############################################################################
+# C#
+##############################################################################
+load(
+    "@com_google_googleapis_imports//:imports.bzl",
+    "csharp_gapic_assembly_pkg",
+    "csharp_gapic_library",
+    "csharp_grpc_library",
+    "csharp_proto_library",
+)
+
+csharp_proto_library(
+    name = "iam_csharp_proto",
+    deps = [
+        ":iam_policy_proto",
+        ":options_proto",
+        ":policy_proto",
+        "//google/iam/v1/logging:audit_data_proto"
+    ],
+)
+
+csharp_grpc_library(
+    name = "iam_csharp_grpc",
+    srcs = [":iam_policy_proto"],
+    deps = [":iam_csharp_proto"],
+)
+
+csharp_gapic_library(
+    name = "iam_csharp_gapic",
+    srcs = [":iam_proto_with_info"],
+    common_resources_config = "@gax_dotnet//:Google.Api.Gax/ResourceNames/CommonResourcesConfig.json",
+    deps = [
+        ":iam_csharp_grpc",
+        ":iam_csharp_proto",
+    ],
+)
+
+# Open Source Packages
+csharp_gapic_assembly_pkg(
+    name = "google-cloud-iam-v1-csharp",
+    deps = [
+        ":iam_csharp_gapic",
+        ":iam_csharp_grpc",
+        ":iam_csharp_proto",
+    ],
 )

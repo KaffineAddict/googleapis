@@ -228,7 +228,7 @@ load(
 
 nodejs_gapic_library(
     name = "apigeeconnect_nodejs_gapic",
-    package_name = "@google-cloud/apigeeconnect",
+    package_name = "@google-cloud/apigee-connect",
     src = ":apigeeconnect_proto_with_info",
     extra_protoc_parameters = ["metadata"],
     grpc_service_config = "connection_grpc_service_config.json",
@@ -323,6 +323,7 @@ csharp_gapic_library(
     srcs = [":apigeeconnect_proto_with_info"],
     common_resources_config = "@gax_dotnet//:Google.Api.Gax/ResourceNames/CommonResourcesConfig.json",
     grpc_service_config = "connection_grpc_service_config.json",
+    service_yaml = "apigeeconnect_v1.yaml",
     deps = [
         ":apigeeconnect_csharp_grpc",
         ":apigeeconnect_csharp_proto",
@@ -342,4 +343,20 @@ csharp_gapic_assembly_pkg(
 ##############################################################################
 # C++
 ##############################################################################
-# Put your C++ rules here
+load(
+    "@com_google_googleapis_imports//:imports.bzl",
+    "cc_grpc_library",
+    "cc_proto_library",
+)
+
+cc_proto_library(
+    name = "apigeeconnect_cc_proto",
+    deps = [":apigeeconnect_proto"],
+)
+
+cc_grpc_library(
+    name = "apigeeconnect_cc_grpc",
+    srcs = [":apigeeconnect_proto"],
+    grpc_only = True,
+    deps = [":apigeeconnect_cc_proto"],
+)

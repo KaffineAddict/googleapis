@@ -169,7 +169,10 @@ py_gapic_library(
     name = "privatecatalog_py_gapic",
     srcs = [":privatecatalog_proto"],
     grpc_service_config = "cloudprivatecatalog_grpc_service_config.json",
-    opt_args = ["warehouse-package-name=google-cloud-private-catalog"]
+    opt_args = [
+        "warehouse-package-name=google-cloud-private-catalog",
+        "autogen-snippets"
+    ]
 )
 
 # Open Source Packages
@@ -234,7 +237,7 @@ load(
 
 nodejs_gapic_library(
     name = "privatecatalog_nodejs_gapic",
-    package_name = "@google-cloud/privatecatalog",
+    package_name = "@google-cloud/private-catalog",
     src = ":privatecatalog_proto_with_info",
     extra_protoc_parameters = ["metadata"],
     grpc_service_config = "cloudprivatecatalog_grpc_service_config.json",
@@ -330,6 +333,7 @@ csharp_gapic_library(
     srcs = [":privatecatalog_proto_with_info"],
     common_resources_config = "@gax_dotnet//:Google.Api.Gax/ResourceNames/CommonResourcesConfig.json",
     grpc_service_config = "cloudprivatecatalog_grpc_service_config.json",
+    service_yaml = "cloudprivatecatalog_v1beta1.yaml",
     deps = [
         ":privatecatalog_csharp_grpc",
         ":privatecatalog_csharp_proto",

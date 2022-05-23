@@ -167,6 +167,7 @@ ruby_grpc_library(
 ##############################################################################
 load(
     "@com_google_googleapis_imports//:imports.bzl",
+    "csharp_gapic_assembly_pkg",
     "csharp_grpc_library",
     "csharp_proto_library",
 )
@@ -182,7 +183,33 @@ csharp_grpc_library(
     deps = [":orgpolicy_csharp_proto"],
 )
 
+csharp_gapic_assembly_pkg(
+    name = "google-cloud-orgpolicy-v1-csharp",
+    package_name = "Google.Cloud.OrgPolicy.V1",
+    generate_nongapic_package = True,
+    deps = [
+        ":orgpolicy_csharp_grpc",
+        ":orgpolicy_csharp_proto",
+    ],
+)
+
 ##############################################################################
 # C++
 ##############################################################################
-# Put your C++ code here
+load(
+    "@com_google_googleapis_imports//:imports.bzl",
+    "cc_grpc_library",
+    "cc_proto_library",
+)
+
+cc_proto_library(
+    name = "orgpolicy_cc_proto",
+    deps = [":orgpolicy_proto"],
+)
+
+cc_grpc_library(
+    name = "orgpolicy_cc_grpc",
+    srcs = [":orgpolicy_proto"],
+    grpc_only = True,
+    deps = [":orgpolicy_cc_proto"],
+)

@@ -1,4 +1,4 @@
-// Copyright 2021 Google LLC
+// Copyright 2022 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -80,8 +80,10 @@ service ModelService {
   }
 
   // Deletes a Model.
-  // Note: Model can only be deleted if there are no DeployedModels created
-  // from it.
+  //
+  // A model cannot be deleted if any [Endpoint][google.cloud.aiplatform.v1.Endpoint] resource has a
+  // [DeployedModel][google.cloud.aiplatform.v1.DeployedModel] based on the model in its
+  // [deployed_models][google.cloud.aiplatform.v1.Endpoint.deployed_models] field.
   rpc DeleteModel(DeleteModelRequest) returns (google.longrunning.Operation) {
     option (google.api.http) = {
       delete: "/v1/{name=projects/*/locations/*/models/*}"
@@ -93,7 +95,7 @@ service ModelService {
     };
   }
 
-  // Exports a trained, exportable, Model to a location specified by the
+  // Exports a trained, exportable Model to a location specified by the
   // user. A Model is considered to be exportable if it has at least one
   // [supported export format][google.cloud.aiplatform.v1.Model.supported_export_formats].
   rpc ExportModel(ExportModelRequest) returns (google.longrunning.Operation) {
@@ -106,6 +108,15 @@ service ModelService {
       response_type: "ExportModelResponse"
       metadata_type: "ExportModelOperationMetadata"
     };
+  }
+
+  // Imports an externally generated ModelEvaluation.
+  rpc ImportModelEvaluation(ImportModelEvaluationRequest) returns (ModelEvaluation) {
+    option (google.api.http) = {
+      post: "/v1/{parent=projects/*/locations/*/models/*}/evaluations:import"
+      body: "*"
+    };
+    option (google.api.method_signature) = "parent,model_evaluation";
   }
 
   // Gets a ModelEvaluation.
@@ -247,6 +258,23 @@ message ListModelsResponse {
 // Request message for [ModelService.UpdateModel][google.cloud.aiplatform.v1.ModelService.UpdateModel].
 message UpdateModelRequest {
   // Required. The Model which replaces the resource on the server.
+  // When Model Versioning is enabled, the model.name will be used to determine
+  // whether to update the model or model version.
+  // 1. model.name with the @ value, e.g. models/123@1, refers to a version
+  // specific update.
+  // 2. model.name without the @ value, e.g. models/123, refers to a model
+  // update.
+  // 3. model.name with @-, e.g. models/123@-, refers to a model update.
+  // 4. Supported model fields: display_name, description; supported
+  // version-specific fields: version_description. Labels are supported in both
+  // scenarios. Both the model labels and the version labels are merged when a
+  // model is returned. When updating labels, if the request is for
+  // model-specific update, model label gets updated. Otherwise, version labels
+  // get updated.
+  // 5. A model name or model version name fields update mismatch will cause a
+  // precondition error.
+  // 6. One request cannot update both the model and the version fields. You
+  // must update them separately.
   Model model = 1 [(google.api.field_behavior) = REQUIRED];
 
   // Required. The update mask applies to the resource.
@@ -294,7 +322,6 @@ message ExportModelRequest {
   }
 
   // Required. The resource name of the Model to export.
-  // Format: `projects/{project}/locations/{location}/models/{model}`
   string name = 1 [
     (google.api.field_behavior) = REQUIRED,
     (google.api.resource_reference) = {
@@ -331,6 +358,21 @@ message ExportModelOperationMetadata {
 // Response message of [ModelService.ExportModel][google.cloud.aiplatform.v1.ModelService.ExportModel] operation.
 message ExportModelResponse {
 
+}
+
+// Request message for [ModelService.ImportModelEvaluation][google.cloud.aiplatform.v1.ModelService.ImportModelEvaluation]
+message ImportModelEvaluationRequest {
+  // Required. The name of the parent model resource.
+  // Format: `projects/{project}/locations/{location}/models/{model}`
+  string parent = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {
+      type: "aiplatform.googleapis.com/Model"
+    }
+  ];
+
+  // Required. Model evaluation resource to be imported.
+  ModelEvaluation model_evaluation = 2 [(google.api.field_behavior) = REQUIRED];
 }
 
 // Request message for [ModelService.GetModelEvaluation][google.cloud.aiplatform.v1.ModelService.GetModelEvaluation].
